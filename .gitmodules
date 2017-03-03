@@ -1,0 +1,3 @@
+[submodule "horizon"]
+	path = horizon
+	url = https://git.launchpad.net/~ubuntu-server-dev/ubuntu/+source/horizon

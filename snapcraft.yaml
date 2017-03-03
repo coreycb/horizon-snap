@@ -1,0 +1,33 @@
+name: horizon
+version: 'ocata'
+summary: OpenStack Dashboard
+description: |
+  Horizon is a Django-based project aimed at providing
+  a complete OpenStack Dashboard along with an extensible
+  framework for building new dashboards from reusable components.
+
+grade: devel
+confinement: classic
+
+apps:
+  horizon:
+    command: bin/django-admin
+    environment:
+      PYTHONPATH: $SNAP/horizon
+      DJANGO_SETTINGS_MODULE: openstack_dashboard.settings
+#    plugs:
+#      - network
+#      - network-bind
+
+parts:
+  horizon-requirements:
+    plugin: python
+    python-version: python3
+    requirements: horizon/requirements.txt
+  horizon:
+    plugin: dump
+    source: horizon/
+    organize:
+      '*': horizon/
+    after:
+      - horizon-requirements
