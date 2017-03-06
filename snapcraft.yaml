@@ -1,33 +1,51 @@
 name: horizon
-version: 'ocata'
+version: ocata
 summary: OpenStack Dashboard
 description: |
   Horizon is a Django-based project aimed at providing
   a complete OpenStack Dashboard along with an extensible
   framework for building new dashboards from reusable components.
-
-grade: devel
 confinement: classic
+grade: devel
 
 apps:
-  horizon:
-    command: bin/django-admin
-    environment:
-      PYTHONPATH: $SNAP/horizon
-      DJANGO_SETTINGS_MODULE: openstack_dashboard.settings
-#    plugs:
-#      - network
-#      - network-bind
+  dashboard:
+    command: snap-openstack dashboard
+    daemon: simple
 
 parts:
-  horizon-requirements:
-    plugin: python
-    python-version: python3
-    requirements: horizon/requirements.txt
   horizon:
-    plugin: dump
-    source: horizon/
-    organize:
-      '*': horizon/
-    after:
-      - horizon-requirements
+    plugin: python
+    python-version: python2
+    source: http://tarballs.openstack.org/horizon/horizon-master.tar.gz
+    constraints: https://raw.githubusercontent.com/openstack/requirements/master/upper-constraints.txt
+    python-packages:
+      - uwsgi
+      - git+https://github.com/coreycb/snap.openstack#egg=snap.openstack
+    build-packages:
+      - libgd-tools
+      - nginx
+      - nginx-doc
+      - python-django-uwsgi
+      - uwsgi
+      - uwsgi-core
+      - uwsgi-emperor
+      - uwsgi-plugin-python
+#  config:
+#    after:
+#      - keystone
+#    plugin: dump
+#    source: http://tarballs.openstack.org/keystone/keystone-master.tar.gz
+#    organize:
+#      etc/*.conf: etc/keystone/
+#      etc/*.ini: etc/keystone/
+#      etc/*.json: etc/keystone/
+#      etc/*.templates: etc/keystone/
+#    filesets:
+#      etc:
+#        - etc/keystone/*.conf
+#        - etc/keystone/*.ini
+#        - etc/keystone/*.json
+#        - etc/keystone/*.templates
+#    stage: [$etc]
+#    snap: [$etc]

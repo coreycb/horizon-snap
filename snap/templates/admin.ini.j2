@@ -1,0 +1,20 @@
+[uwsgi]
+master = true
+workers = 10
+threads = 2
+no-orphans = true
+plugin = python
+chmod-socket = 660
+
+socket = {{ snap_common }}/run/uwsgi-horizon/horizon.sock
+pidfile = {{ snap_common }}/run/uwsgi-horizon/horizon.pid
+logto = {{ snap_common }}/log/uwsgi/app/horizon.log
+
+name = horizon
+uid = horizon
+gid = www-data
+
+chdir = {{ snap_common }}/etc/openstack_dashboard/
+env = DJANGO_SETTINGS_MODULE=openstack_dashboard.settings
+module = django.core.wsgi:get_wsgi_application()
+wsgi-file = {{ snap_common }}/www/wsgi/horizon.wsgi
